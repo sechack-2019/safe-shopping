@@ -14,4 +14,3 @@ jobs:
       - run:
           name: Print the Current Time
           command: date
-          command: date
