@@ -74,6 +74,9 @@ workflows:
           requires:
             - install_dependency
       - chrome_packaging:
+          filters:
+           branches:
+            only: /^release\/.+$/
           requires:
             - chrome_lint
             - chrome_build
