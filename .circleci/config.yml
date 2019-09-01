@@ -22,7 +22,6 @@ jobs:
     steps:
       - checkout
       - prepare_node
-      - prepare_ts
       - persist_to_workspace:
           root: .
           paths:
