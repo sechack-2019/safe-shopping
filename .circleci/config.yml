@@ -45,6 +45,14 @@ jobs:
       - run:
           command: yarn build
           working_directory: chrome
+  chrome_packaging:
+    executor: node-executor
+    steps:
+      - attach_workspace: # workspaceをアタッチする
+         at: .
+      - store_artifacts:
+         path: /dist/chrome
+
 
 workflows:
   chrome_ci:
@@ -56,3 +64,16 @@ workflows:
       - chrome_build:
           requires:
             - install_dependency
+  chrome_cd:
+    jobs:
+      - install_dependency
+      - chrome_lint:
+          requires:
+            - install_dependency
+      - chrome_build:
+          requires:
+            - install_dependency
+      - chrome_packaging:
+          requires:
+            - chrome_lint
+            - chrome_build
