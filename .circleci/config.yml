@@ -11,6 +11,10 @@ commands:
       - run:
          command: yarn install
          working_directory: chrome
+  prepare_ts:
+    steps:
+      - run:
+         command: yarn global add typescript
 
 jobs:
   install_dependency:
@@ -18,6 +22,7 @@ jobs:
     steps:
       - checkout
       - prepare_node
+      - prepare_ts
       - persist_to_workspace:
           root: .
           paths:
