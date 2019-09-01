@@ -1,16 +1,82 @@
-version: 2
-jobs:
-  build:
-    docker:
-      - image: debian:stretch
+version: 2.1
 
+executors:
+  node-executor:
+    docker:
+      - image: circleci/node:9.9.0
+
+commands:
+  prepare_node:
+    steps:
+      - run:
+         command: yarn install
+         working_directory: chrome
+  prepare_ts:
+    steps:
+      - run:
+         command: yarn global add typescript
+
+jobs:
+  install_dependency:
+    executor: node-executor
     steps:
       - checkout
+      - prepare_node
+      - prepare_ts
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
 
+  chrome_lint:
+    executor: node-executor
+    steps:
+      - attach_workspace: # workspaceをアタッチする
+          at: .
       - run:
-          name: Greeting
-          command: echo Hello, world.
+         command: yarn lint
+         working_directory: chrome
 
+  chrome_build:
+    executor: node-executor
+    steps:
+      - attach_workspace: # workspaceをアタッチする
+          at: .
       - run:
-          name: Print the Current Time
-          command: date
+          command: yarn build
+          working_directory: chrome
+  chrome_packaging:
+    executor: node-executor
+    steps:
+      - attach_workspace: # workspaceをアタッチする
+         at: .
+      - store_artifacts:
+         path: /dist/chrome
+
+
+workflows:
+  chrome_ci:
+    jobs:
+      - install_dependency
+      - chrome_lint:
+          requires:
+            - install_dependency
+      - chrome_build:
+          requires:
+            - install_dependency
+  chrome_cd:
+    jobs:
+      - install_dependency
+      - chrome_lint:
+          requires:
+            - install_dependency
+      - chrome_build:
+          requires:
+            - install_dependency
+      - chrome_packaging:
+          filters:
+           branches:
+            only: /^release\/.+$/
+          requires:
+            - chrome_lint
+            - chrome_build
