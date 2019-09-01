@@ -3,7 +3,7 @@ version: 2.1
 executors:
   node-executor:
     docker:
-      - image: circleci/node:9.9.0
+      - image: circleci/node:8.1.4
 
 commands:
   prepare_node:
