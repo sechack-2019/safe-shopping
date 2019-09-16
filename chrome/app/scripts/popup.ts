@@ -15,14 +15,12 @@ async function clickedEvent() {
   console.log('start');
 
   // @ts-ignore
-  // let itemList= (await executeOnChrome(() => { return document.getElementsByClassName('items-box')}));
   const itemList: HTMLCollectionOf<Element> = (await executeOnChrome(() => { return document.getElementsByClassName('items-box') as HTMLCollectionOf<Element>; }));
 
   console.log(`itemList: ${itemList.length}`);
 
   const itemElementList: Array<HTMLElement> = (new Array(itemList.length))
     .map((index: number) => itemList[index] as HTMLElement);
-    // .filter((element) => element != null)
   console.log(itemElementList);
   console.log(itemElementList.length);
 
@@ -55,18 +53,3 @@ const executeOnChrome = (query: (() => void)) =>
       reject(e);
     }
   }));
-
-// const executeOnChrome = (query) =>
-//   new Promise(((resolve, reject) => {
-//     try {
-//       chrome.tabs.executeScript({
-//         code: `(${query})()`
-//       }, (result) => {
-//         resolve(result);
-//       });
-//     } catch (e) {
-//       reject(e);
-//     }
-//   }));
-//
-// let query = () => {return "Hello"};
