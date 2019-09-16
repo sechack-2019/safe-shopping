@@ -35,3 +35,8 @@ jobs:
       run: yarn test
       env:
         CI: true
+    - name: npm lint
+      working-directory: chrome
+      run: yarn lint
+      env:
+        CI: true
