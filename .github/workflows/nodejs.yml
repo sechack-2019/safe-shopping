@@ -27,12 +27,6 @@ jobs:
         yarn build
       env:
         CI: true
-    
-    - name: npm lint
-      working-directory: chrome
-      run: yarn lint
-      env:
-        CI: true
   test:
     runs-on: ubuntu-latest
     strategy:
